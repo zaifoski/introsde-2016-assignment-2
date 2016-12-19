@@ -5,7 +5,7 @@
   "logo": "https://avatars0.githubusercontent.com/u/11249211?v=3&s=200",
   "image": "heroku/java",
   "env": {
-    "BUILDPACK_URL": "https://github.com/IntroSDE/heroku-buildpack-ant.git",
+    "BUILDPACK_URL": "https://github.com/zaifoski/heroku-buildpack-ant.git",
     "HEROKU_URL": {
       "description": "The URL of this Heroku app.",
       "value": "http://ass2zai.herokuapp.com"
