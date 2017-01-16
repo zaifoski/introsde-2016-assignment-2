@@ -99,10 +99,9 @@ public class PersonCollectionResource {
     @GET
     @Path("{id}/{measuretype}")
     @Produces({MediaType.TEXT_XML,  MediaType.APPLICATION_JSON ,  MediaType.APPLICATION_XML })
-    public List<HealthMeasureHistory> getMeasureFromPersonId(@PathParam("id") int id,
+    public HealthMeasureHistory getMeasureFromPersonId(@PathParam("id") int id,
     	@PathParam("measuretype") String type) {      
-        List<HealthMeasureHistory> list = new ArrayList<HealthMeasureHistory>();
-        list = (List<HealthMeasureHistory>) HealthMeasureHistory.getHealthMeasureHistoryById(id);
-        return list;
+	        HealthMeasureHistory list = HealthMeasureHistory.getHealthMeasureHistoryById(id);
+	        return list;
     }
 }
