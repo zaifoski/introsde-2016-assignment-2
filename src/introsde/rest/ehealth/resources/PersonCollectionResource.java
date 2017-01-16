@@ -105,20 +105,20 @@ public class PersonCollectionResource {
     	String s = "";
 	    if (history.getMeasureDefinition().getMeasureName().equals(type)){
 	    	s += "history.getClass() ";
-	    	s += history.getClass();
-	    	s += "history.getIdMeasureHistory() :";
+	    	s += history.getClass().toString();
+	    	s += "\nhistory.getIdMeasureHistory() :";
 	    	s += history.getIdMeasureHistory();
-	    	s += "history.getMeasureDefinition() :";
-	    	s += history.getMeasureDefinition();
-	    	s += "history.getPerson() :";
-	    	s += history.getPerson();
-	    	s += "history.getTimestamp() .";
+	    	s += "\nhistory.getMeasureDefinition() :";
+	    	s += history.getMeasureDefinition().toString();
+	    	s += "\nhistory.getPerson() :";
+	    	s += history.getPerson().toString();
+	    	s += "\nhistory.getTimestamp() .";
 	    	s += history.getTimestamp();
-	    	s += "history.getValue() :";
-	    	s += history.getValue();
-	    	s += "history.getAll() :";
-	    	s += history.getAll();
-	    	s += "history.getHealthMeasureHistoryById(Integer.parseInt(history.getValue())): ";
+	    	s += "\nhistory.getValue() :";
+	    	s += history.getValue().toString();
+	    	s += "\nhistory.getAll() :";
+	    	s += history.getAll().toString();
+	    	s += "\nhistory.getHealthMeasureHistoryById(Integer.parseInt(history.getValue())): ";
 	    	s += history.getHealthMeasureHistoryById(Integer.parseInt(history.getValue()));
 	    }
 	    return s;
