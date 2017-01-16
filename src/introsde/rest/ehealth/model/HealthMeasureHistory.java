@@ -102,6 +102,14 @@ public class HealthMeasureHistory implements Serializable {
 	public void setPerson(Person param) {
 	    this.person = param;
 	}
+	
+	private Integer idMeasureDef;
+	public void setIdMeasureDef(Integer idMeasureDef){
+		this.idMeasureDef = idMeasureDef;
+	}
+	public Integer getidMeasureDef(){
+		return this.idMeasureDef;
+	}
 
 	// database operations
 	public static HealthMeasureHistory getHealthMeasureHistoryById(int id) {
