@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class HealthMeasureHistory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="idMeasureDef")
+	@Column(name="idMeasureDefinition")
 	private Integer idMeasureDef;
 	public void setIdMeasureDef(Integer idMeasureDef){
 		this.idMeasureDef = idMeasureDef;
