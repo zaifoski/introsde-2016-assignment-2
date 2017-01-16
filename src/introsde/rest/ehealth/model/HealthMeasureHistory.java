@@ -35,6 +35,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class HealthMeasureHistory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Column(name="idMeasureDef")
+	private Integer idMeasureDef;
+	public void setIdMeasureDef(Integer idMeasureDef){
+		this.idMeasureDef = idMeasureDef;
+	}
+	public Integer getidMeasureDef(){
+		return this.idMeasureDef;
+	}
+
 	@Id
 	@GeneratedValue(generator="sqlite_mhistory")
 	@TableGenerator(name="sqlite_mhistory", table="sqlite_sequence",
@@ -101,14 +110,6 @@ public class HealthMeasureHistory implements Serializable {
 
 	public void setPerson(Person param) {
 	    this.person = param;
-	}
-	
-	private Integer idMeasureDef;
-	public void setIdMeasureDef(Integer idMeasureDef){
-		this.idMeasureDef = idMeasureDef;
-	}
-	public Integer getidMeasureDef(){
-		return this.idMeasureDef;
 	}
 
 	// database operations
