@@ -60,7 +60,7 @@ public class HealthMeasureHistory implements Serializable {
 	private String value;
 
 	@ManyToOne
-	@JoinColumn(name = "idMeasureDef", referencedColumnName = "idMeasureDef")
+	@JoinColumn(name = "idMeasureDefinition", referencedColumnName = "idMeasureDef")
 	private MeasureDefinition measureDefinition;
 
 	// notice that we haven't included a reference to the history in Person
