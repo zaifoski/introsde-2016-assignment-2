@@ -102,7 +102,7 @@ public class PersonCollectionResource {
     public List<HealthMeasureHistory> getMeasureFromPersonId(@PathParam("id") int id,
     	@PathParam("measuretype") String type) {
 	    List<HealthMeasureHistory> listAll = HealthMeasureHistory.getAll();
-	    List<HealthMeasureHistory> listFiltered = HealthMeasureHistory.getAll();
+	    List<HealthMeasureHistory> listFiltered = new ArrayList<HealthMeasureHistory>();
 	    for(int i = 0; i < listAll.size(); i++){
 	    	HealthMeasureHistory measure = listAll.get(i);
 	    	if (
