@@ -35,6 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class HealthMeasureHistory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/*
 	@Column(name="idMeasureDefinition")
 	private Integer idMeasureDefinition;
 	public void setIdMeasureDefinition(Integer idMeasureDef){
@@ -43,6 +44,7 @@ public class HealthMeasureHistory implements Serializable {
 	public Integer getIdMeasureDefinition(){
 		return this.idMeasureDefinition;
 	}
+	*/
 
 	@Id
 	@GeneratedValue(generator="sqlite_mhistory")
