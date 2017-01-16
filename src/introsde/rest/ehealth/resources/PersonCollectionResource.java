@@ -99,9 +99,12 @@ public class PersonCollectionResource {
     @GET
     @Path("{id}/{measuretype}")
     @Produces({MediaType.TEXT_XML,  MediaType.APPLICATION_JSON ,  MediaType.APPLICATION_XML })
-    public HealthMeasureHistory getMeasureFromPersonId(@PathParam("id") int id,
+    public String getMeasureFromPersonId(@PathParam("id") int id,
     	@PathParam("measuretype") String type) {      
-	        HealthMeasureHistory list = HealthMeasureHistory.getHealthMeasureHistoryById(id);
-	        return list;
+	    HealthMeasureHistory history = HealthMeasureHistory.getHealthMeasureHistoryById(id);
+	    if (history.getMeasureDefinition().getMeasureName().equals(type)){
+	    	history.getValue();
+	    }
+	    return history.getValue();
     }
 }
