@@ -36,12 +36,12 @@ public class HealthMeasureHistory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Column(name="idMeasureDefinition")
-	private Integer idMeasureDef;
-	public void setIdMeasureDef(Integer idMeasureDef){
-		this.idMeasureDef = idMeasureDef;
+	private Integer idMeasureDefinition;
+	public void setIdMeasureDefinition(Integer idMeasureDef){
+		this.idMeasureDefinition = idMeasureDef;
 	}
-	public Integer getidMeasureDef(){
-		return this.idMeasureDef;
+	public Integer getIdMeasureDefinition(){
+		return this.idMeasureDefinition;
 	}
 
 	@Id
