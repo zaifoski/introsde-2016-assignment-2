@@ -101,17 +101,18 @@ public class PersonCollectionResource {
     @Produces({MediaType.TEXT_XML,  MediaType.APPLICATION_JSON ,  MediaType.APPLICATION_XML })
     public List<HealthMeasureHistory> getMeasureFromPersonId(@PathParam("id") int id,
     	@PathParam("measuretype") String type) {
-	    List<HealthMeasureHistory> list = HealthMeasureHistory.getAll();
-	    for(int i = 0; i < list.size(); i++){
-	    	HealthMeasureHistory measure = list.get(i);
+	    List<HealthMeasureHistory> listAll = HealthMeasureHistory.getAll();
+	    List<HealthMeasureHistory> listFiltered = HealthMeasureHistory.getAll();
+	    for(int i = 0; i < listAll.size(); i++){
+	    	HealthMeasureHistory measure = listAll.get(i);
 	    	if (
-	    			!measure.getMeasureDefinition().getMeasureName().equals(type) ||
-	    			(measure.getPerson().getIdPerson() != id)
+	    			measure.getMeasureDefinition().getMeasureName().equals(type) &&
+	    			measure.getPerson().getIdPerson() == id
 	    	){
-	    		list.remove(i);
+	    		listFiltered.add(measure);
 	    	}
 	    }
-	    return list;
+	    return listFiltered;
     	/*
 	    String s = "";
 	    if (history.getMeasureDefinition().getMeasureName().equals(type)){
