@@ -1,7 +1,9 @@
 package introsde.rest.ehealth.resources;
+import introsde.rest.ehealth.model.HealthMeasureHistory;
 import introsde.rest.ehealth.model.Person;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.*;
 import javax.persistence.EntityManager;
@@ -42,6 +44,10 @@ public class PersonCollectionResource {
     @PersistenceContext(unitName = "introsde-jpa",type=PersistenceContextType.TRANSACTION)
     private EntityManagerFactory entityManagerFactory;
 
+    /*
+     * Request #1: GET /person should list all the people (see above Person model to know what
+     * data to return here) in your database (wrapped under the root element "people")
+     */
     // Return the list of people to the user in the browser
     @GET
     @Produces({MediaType.TEXT_XML,  MediaType.APPLICATION_JSON ,  MediaType.APPLICATION_XML })
@@ -62,12 +68,17 @@ public class PersonCollectionResource {
         int count = people.size();
         return String.valueOf(count);
     }
-
+    
+    /*
+     * Request #4: POST /person should create a new person and return the newly
+     * created person with its assigned id (if a health profile is included,
+     * create also those measurements for the new person).
+     */
     @POST
     @Produces(MediaType.APPLICATION_XML)
     @Consumes(MediaType.APPLICATION_XML)
     public Person newPerson(Person person) throws IOException {
-        System.out.println("Creating new person...");            
+        System.out.println("Creating new person...");          
         return Person.savePerson(person);
     }
 
@@ -78,5 +89,20 @@ public class PersonCollectionResource {
     @Path("{personId}")
     public PersonResource getPerson(@PathParam("personId") int id) {
         return new PersonResource(uriInfo, request, id);
+    }
+    
+
+    /*
+     * Request #6: GET /person/{id}/{measureType} should return the list of values (the history)
+     * of {measureType} (e.g. weight) for person identified by {id}
+     */
+    @GET
+    @Path("{id}/{measuretype}")
+    @Produces({MediaType.TEXT_XML,  MediaType.APPLICATION_JSON ,  MediaType.APPLICATION_XML })
+    public List<HealthMeasureHistory> getMeasureFromPersonId(@PathParam("id") int id,
+    	@PathParam("measuretype") String type) {      
+        List<HealthMeasureHistory> list = new ArrayList<HealthMeasureHistory>();
+        list = (List<HealthMeasureHistory>) HealthMeasureHistory.getHealthMeasureHistoryById(id);
+        return list;
     }
 }

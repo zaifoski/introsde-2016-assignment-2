@@ -40,8 +40,11 @@ public class PersonResource {
         this.request = request;
         this.id = id;
     }
-
-
+	    
+	/*
+	 *Request #2: GET /person/{id} should give all the personal information plus current
+	 *measures of person identified by {id} (e.g., current measures means current health profile) 
+	 */
     // Application integration
     @GET
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -51,7 +54,6 @@ public class PersonResource {
             throw new RuntimeException("Get: Person with " + id + " not found");
         return person;
     }
-
     // for the browser
     @GET
     @Produces(MediaType.TEXT_XML)
@@ -63,6 +65,12 @@ public class PersonResource {
         return person;
     }
 
+    
+    /*
+     * Request #3: PUT /person/{id} should update the personal information of the person
+     * identified by {id} (e.g., only the person's information, not the measures of the 
+     * health profile)
+     */
     @PUT
     @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     public Response putPerson(Person person) {
@@ -82,6 +90,10 @@ public class PersonResource {
         return res;
     }
 
+    
+    /*
+     * Request #5: DELETE /person/{id} should delete the person identified by {id} from the system
+     */
     @DELETE
     public void deletePerson() {
         Person c = getPersonById(id);
