@@ -100,9 +100,20 @@ public class PersonCollectionResource {
     @Path("{id}/{measuretype}")
     @Produces({MediaType.TEXT_XML,  MediaType.APPLICATION_JSON ,  MediaType.APPLICATION_XML })
     public List<HealthMeasureHistory> getMeasureFromPersonId(@PathParam("id") int id,
-    	@PathParam("measuretype") String type) {      
-	    HealthMeasureHistory history = HealthMeasureHistory.getHealthMeasureHistoryById(id);
-    	String s = "";
+    	@PathParam("measuretype") String type) {
+	    List<HealthMeasureHistory> list = HealthMeasureHistory.getAll();
+	    for(int i = 0; i < list.size(); i++){
+	    	HealthMeasureHistory measure = list.get(i);
+	    	if (
+	    			!measure.getMeasureDefinition().getMeasureName().equals(type) ||
+	    			(measure.getPerson().getIdPerson() != id)
+	    	){
+	    		list.remove(i);
+	    	}
+	    }
+	    return list;
+    	/*
+	    String s = "";
 	    if (history.getMeasureDefinition().getMeasureName().equals(type)){
 	    	s += "history.getClass() ";
 	    	s += history.getClass().toString();
@@ -121,11 +132,6 @@ public class PersonCollectionResource {
 	    	s += "\nhistory.getHealthMeasureHistoryById(Integer.parseInt(history.getValue())): ";
 	    	s += history.getHealthMeasureHistoryById(Integer.parseInt(history.getValue()));
 	    }
-	    //return s;
-	    List<HealthMeasureHistory> list = HealthMeasureHistory.getAll();
-	    for(int i = 0; i < list.size(); i++){
-	    	list.get(i);
-	    }
-	    return list;
+	    return s;*/
     }
 }
