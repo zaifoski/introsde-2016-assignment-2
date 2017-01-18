@@ -46,6 +46,7 @@ public class UpdatePeople {
 	    			actualMeasure.setValue(mostRecent.getValue());
 	    			actualMeasures.add(actualMeasure);
 	    			p.setLifeStatus(actualMeasures);
+	    			p.updatePerson(p);
 	    		}
 	    	}
 	    } 
