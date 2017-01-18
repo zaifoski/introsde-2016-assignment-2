@@ -1,5 +1,6 @@
 package introsde.rest.ehealth;
 
+import java.util.Date;
 import java.util.List;
 
 import introsde.rest.ehealth.model.HealthMeasureHistory;
@@ -21,22 +22,30 @@ public class UpdatePeople {
 				//Date actualMeasureDate = actualMeasure.getTimestamp();
 				Integer actualMeasurePerson = actualMeasure.getPerson().getIdPerson();
 		    	List<HealthMeasureHistory> newMeasures = HealthMeasureHistory.getAll();
+    			HealthMeasureHistory mostRecent = null;
 	    		for(int k = 0; k < newMeasures.size(); k++){
 	    			HealthMeasureHistory newMeasure = newMeasures.get(k);
 	    			String newMeasureName = newMeasure.getMeasureDefinition().getMeasureName();
-	    			//Date newMeasureDate = newMeasure.getTimestamp();
+	    			Date newMeasureDate = newMeasure.getTimestamp();
 	    			Integer newMeasurePerson = newMeasure.getPerson().getIdPerson();
 		    		if(
 			    			newMeasurePerson == actualMeasurePerson
 		    				&& actualMeasureName.equals(newMeasureName)
 		    				//&& actualMeasureDate < newMeasureDate
 		    		){
-		    			LifeStatus newLifeStatus = actualMeasure;
-		    			actualMeasures.remove(newLifeStatus);
-		    			newLifeStatus.setValue(newMeasure.getValue());
-		    			actualMeasures.add(newLifeStatus);
-		    			p.setLifeStatus(actualMeasures);
+		    			if(
+		    					mostRecent == null ||
+		    					newMeasureDate.after(mostRecent.getTimestamp())
+		    			){
+		    				mostRecent = newMeasure;
+		    			}
 		    		}
+	    		}
+	    		if (mostRecent != null){
+	    			actualMeasures.remove(actualMeasure);
+	    			actualMeasure.setValue(mostRecent.getValue());
+	    			actualMeasures.add(actualMeasure);
+	    			p.setLifeStatus(actualMeasures);
 	    		}
 	    	}
 	    } 
