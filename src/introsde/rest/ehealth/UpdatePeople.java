@@ -1,0 +1,44 @@
+package introsde.rest.ehealth;
+
+import java.util.List;
+
+import introsde.rest.ehealth.model.HealthMeasureHistory;
+import introsde.rest.ehealth.model.LifeStatus;
+import introsde.rest.ehealth.model.Person;
+
+public class UpdatePeople {
+
+	public UpdatePeople(){}
+	
+	public void updatePeople(){
+	    List<Person> people = Person.getAll();
+	    for (int i = 0; i < people.size(); i++){
+	    	Person p = people.get(i);
+	    	List<LifeStatus> actualMeasures = p.getLifeStatus();
+	    	for(int j=0; j< actualMeasures.size();j++){
+	    		LifeStatus actualMeasure = actualMeasures.get(j);
+				String actualMeasureName = actualMeasure.getMeasureDefinition().getMeasureName();
+				//Date actualMeasureDate = actualMeasure.getTimestamp();
+				Integer actualMeasurePerson = actualMeasure.getPerson().getIdPerson();
+		    	List<HealthMeasureHistory> newMeasures = HealthMeasureHistory.getAll();
+	    		for(int k = 0; k < newMeasures.size(); k++){
+	    			HealthMeasureHistory newMeasure = newMeasures.get(k);
+	    			String newMeasureName = newMeasure.getMeasureDefinition().getMeasureName();
+	    			//Date newMeasureDate = newMeasure.getTimestamp();
+	    			Integer newMeasurePerson = newMeasure.getPerson().getIdPerson();
+		    		if(
+			    			newMeasurePerson == actualMeasurePerson
+		    				&& actualMeasureName.equals(newMeasureName)
+		    				//&& actualMeasureDate < newMeasureDate
+		    		){
+		    			LifeStatus newLifeStatus = actualMeasure;
+		    			actualMeasures.remove(newLifeStatus);
+		    			newLifeStatus.setValue(newMeasure.getValue());
+		    			actualMeasures.add(newLifeStatus);
+		    			p.setLifeStatus(actualMeasures);
+		    		}
+	    		}
+	    	}
+	    } 
+	}
+}

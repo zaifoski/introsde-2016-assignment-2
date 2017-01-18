@@ -29,6 +29,9 @@ public class App
     	System.out.println("Starting sdelab standalone HTTP server...");
         JdkHttpServerFactory.createHttpServer(BASE_URI, createApp());
         System.out.println("Server started on " + BASE_URI + "\n[kill the process to exit]");
+        
+        UpdatePeople up = new UpdatePeople();
+        up.updatePeople();
     }
 
     public static ResourceConfig createApp() {
