@@ -30,8 +30,7 @@ public class App
         JdkHttpServerFactory.createHttpServer(BASE_URI, createApp());
         System.out.println("Server started on " + BASE_URI + "\n[kill the process to exit]");
         
-        UpdatePeople up = new UpdatePeople();
-        up.updatePeople();
+        UpdatePeople.updatePeople();
     }
 
     public static ResourceConfig createApp() {

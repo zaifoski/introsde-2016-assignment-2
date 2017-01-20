@@ -1,5 +1,6 @@
 package introsde.rest.ehealth;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,11 +12,12 @@ public class UpdatePeople {
 
 	public UpdatePeople(){}
 	
-	public void updatePeople(){
+	public static void updatePeople(){
 	    List<Person> people = Person.getAll();
 	    for (int i = 0; i < people.size(); i++){
 	    	Person p = people.get(i);
 	    	List<LifeStatus> actualMeasures = p.getLifeStatus();
+	    	List<LifeStatus> measuresToAdd = new ArrayList<LifeStatus>();
 	    	for(int j=0; j< actualMeasures.size();j++){
 	    		LifeStatus actualMeasure = actualMeasures.get(j);
 				String actualMeasureName = actualMeasure.getMeasureDefinition().getMeasureName();
@@ -42,13 +44,12 @@ public class UpdatePeople {
 		    		}
 	    		}
 	    		if (mostRecent != null){
-	    			actualMeasures.remove(actualMeasure);
 	    			actualMeasure.setValue(mostRecent.getValue());
-	    			actualMeasures.add(actualMeasure);
-	    			p.setLifeStatus(actualMeasures);
-	    			p.updatePerson(p);
+	    			measuresToAdd.add(actualMeasure);
 	    		}
 	    	}
+			p.setLifeStatus(measuresToAdd);
+			Person.updatePerson(p);
 	    } 
 	}
 }
