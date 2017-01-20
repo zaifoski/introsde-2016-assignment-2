@@ -46,10 +46,12 @@ public class UpdatePeople {
 	    		if (mostRecent != null){
 	    			actualMeasure.setValue(mostRecent.getValue());
 	    			measuresToAdd.add(actualMeasure);
+	    			p.setLifeStatus(measuresToAdd);
+	    			Person.updatePerson(p);
 	    		}
 	    	}
-			p.setLifeStatus(measuresToAdd);
-			Person.updatePerson(p);
+			//p.setLifeStatus(measuresToAdd);
+			//Person.updatePerson(p);
 	    } 
 	}
 }
