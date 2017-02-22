@@ -1,6 +1,8 @@
 package introsde.rest.ehealth.resources;
 
+import introsde.rest.ehealth.model.HealthMeasureHistory;
 import introsde.rest.ehealth.model.LifeStatus;
+import introsde.rest.ehealth.model.MeasureDefinition;
 import introsde.rest.ehealth.model.Person;
 
 import java.io.IOException;
@@ -14,6 +16,8 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -127,11 +131,40 @@ public class PersonResource {
     @POST
     @Produces(MediaType.APPLICATION_XML)
     @Consumes(MediaType.APPLICATION_XML)
-    public Person newMeasure(LifeStatus lifeStatus) throws IOException {
+	@Path("{measureType}")
+    public LifeStatus newMeasure(@PathParam("measureType") String measureType, 
+			HealthMeasureHistory measureHistory) throws IOException {
+
+		//find a measureDefinition associated with the name of the measure
+		MeasureDefinition measureDef = MeasureDefinition.getMeasureDefinition(measureType);
+		//find a person identified by a id
+		Person person = Person.getPersonById(this.id);
+		
+		//remove current lifeStatus for a specified person and measureDefinition 
+		LifeStatus ls = LifeStatus.getFilteredLifeStatus(measureDef, person);
+		if(ls != null){
+			LifeStatus.removeLifeStatus(ls);
+		}
+		
+		//save new LifeStatus into db
+		LifeStatus newLifeStatus = new LifeStatus(measureDef, measureHistory.getValue(), person);
+		newLifeStatus = LifeStatus.saveLifeStatus(newLifeStatus);
+		
+		//set measureDefinition for measureName
+		measureHistory.setMeasureDefinition(measureDef);
+		//set person of the new MeasureHistory
+		measureHistory.setPerson(person);
+		//archive a new measure value in the history and save into db 
+		HealthMeasureHistory.saveHealthMeasureHistory(measureHistory);
+		
+		return LifeStatus.getLifeStatusById(newLifeStatus.getIdMeasure());
+		
+		/*
         Person p = Person.getPersonById(id);
         List<LifeStatus> listLifeStatus = p.getLifeStatus();
         listLifeStatus.add(lifeStatus);
         Person.updatePerson(p).setLifeStatus(listLifeStatus);
         return p;
+        */
     }
 }

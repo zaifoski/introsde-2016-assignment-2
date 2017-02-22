@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.TypedQuery;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.persistence.OneToOne;
@@ -52,6 +53,13 @@ public class LifeStatus implements Serializable {
 	private Person person;
 
 	public LifeStatus() {
+	}
+	
+
+	public LifeStatus(MeasureDefinition md, String value, Person person){
+		this.measureDefinition = md;
+		this.value = value;
+		this.person = person;
 	}
 
 	public int getIdMeasure() {
@@ -133,5 +141,20 @@ public class LifeStatus implements Serializable {
 	    em.remove(p);
 	    tx.commit();
 	    LifeCoachDao.instance.closeConnections(em);
+	}
+	
+	public static LifeStatus getFilteredLifeStatus(MeasureDefinition measureDef, Person person) {
+		EntityManager em = LifeCoachDao.instance.createEntityManager();
+		TypedQuery<LifeStatus> typedQuery = em.createNamedQuery("LifeStatus.findByMeasureDefAndPerson", LifeStatus.class)
+				.setParameter(1, measureDef)
+				.setParameter(2, person);
+		try {
+			LifeStatus ls = typedQuery.getSingleResult();
+			LifeCoachDao.instance.closeConnections(em);
+		    return ls; 
+		  }
+		 catch (Exception ex) {
+		    return null;
+		  }		
 	}
 }
