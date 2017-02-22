@@ -1,6 +1,10 @@
 package introsde.rest.ehealth.resources;
 
+import introsde.rest.ehealth.model.LifeStatus;
 import introsde.rest.ehealth.model.Person;
+
+import java.io.IOException;
+import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -8,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -112,5 +117,21 @@ public class PersonResource {
         Person person = Person.getPersonById(personId);
         System.out.println("Person: "+person.toString());
         return person;
+    }
+    
+
+    /*
+     * Request #8: POST /person/{id}/{measureType} should save a new value for the {measureType}
+     * (e.g. weight) of person identified by {id} and archive the old value in the history
+     */
+    @POST
+    @Produces(MediaType.APPLICATION_XML)
+    @Consumes(MediaType.APPLICATION_XML)
+    public Person newMeasure(LifeStatus lifeStatus) throws IOException {
+        Person p = Person.getPersonById(id);
+        List<LifeStatus> listLifeStatus = p.getLifeStatus();
+        listLifeStatus.add(lifeStatus);
+        Person.updatePerson(p).setLifeStatus(listLifeStatus);
+        return p;
     }
 }

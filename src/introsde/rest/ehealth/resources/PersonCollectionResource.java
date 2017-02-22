@@ -1,5 +1,6 @@
 package introsde.rest.ehealth.resources;
 import introsde.rest.ehealth.model.HealthMeasureHistory;
+import introsde.rest.ehealth.model.LifeStatus;
 import introsde.rest.ehealth.model.Person;
 
 import java.io.IOException;
