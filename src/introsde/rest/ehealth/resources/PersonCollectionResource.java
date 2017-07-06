@@ -1,4 +1,5 @@
 package introsde.rest.ehealth.resources;
+import introsde.rest.ehealth.UpdatePeople;
 import introsde.rest.ehealth.model.HealthMeasureHistory;
 import introsde.rest.ehealth.model.LifeStatus;
 import introsde.rest.ehealth.model.Person;
@@ -146,6 +147,7 @@ public class PersonCollectionResource {
     @Produces({MediaType.TEXT_XML,  MediaType.APPLICATION_JSON ,  MediaType.APPLICATION_XML })
     public HealthMeasureHistory getMeasureFromPersonIdMeasureId(@PathParam("id") int id,
     	@PathParam("measuretype") String type,@PathParam("mid") int mid) {
+    	UpdatePeople.updatePeople();
 	    List<HealthMeasureHistory> listAll = HealthMeasureHistory.getAll();
 	    HealthMeasureHistory filtered = null;
 	    for(int i = 0; i < listAll.size(); i++){
