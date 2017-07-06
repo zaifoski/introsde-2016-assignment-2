@@ -25,11 +25,13 @@ public class UpdatePeople {
 				Integer actualMeasurePerson = actualMeasure.getPerson().getIdPerson();
 		    	List<HealthMeasureHistory> newMeasures = HealthMeasureHistory.getAll();
     			HealthMeasureHistory mostRecent = null;
+    			int measuresUniqueId=1;
 	    		for(int k = 0; k < newMeasures.size(); k++){
 	    			HealthMeasureHistory newMeasure = newMeasures.get(k);
 	    			String newMeasureName = newMeasure.getMeasureDefinition().getMeasureName();
 	    			Date newMeasureDate = newMeasure.getTimestamp();
 	    			Integer newMeasurePerson = newMeasure.getPerson().getIdPerson();
+	    			newMeasure.setIdMeasureHistory(measuresUniqueId);
 		    		if(
 			    			newMeasurePerson == actualMeasurePerson
 		    				&& actualMeasureName.equals(newMeasureName)
