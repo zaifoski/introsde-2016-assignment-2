@@ -121,7 +121,7 @@ public class HealthMeasureHistory implements Serializable {
 		LifeCoachDao.instance.closeConnections(em);
 		return p;
 	}
-	
+
 	public static List<HealthMeasureHistory> getAll() {
 		EntityManager em = LifeCoachDao.instance.createEntityManager();
 	    List<HealthMeasureHistory> list = em.createNamedQuery("HealthMeasureHistory.findAll", HealthMeasureHistory.class).getResultList();

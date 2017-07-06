@@ -144,8 +144,9 @@ public class PersonCollectionResource {
     @GET
     @Path("{id}/{measuretype}/{mid}")
     @Produces({MediaType.TEXT_XML,  MediaType.APPLICATION_JSON ,  MediaType.APPLICATION_XML })
-    public HealthMeasureHistory getMeasureFromPersonIdMeasureId(@PathParam("id") int id,
+    public int getMeasureFromPersonIdMeasureId(@PathParam("id") int id,
     	@PathParam("measuretype") String type,@PathParam("mid") int mid) {
-	    return HealthMeasureHistory.getHealthMeasureHistoryById(mid);
+    	HealthMeasureHistory history = HealthMeasureHistory.getHealthMeasureHistoryById(id);
+		return history.getIdMeasureHistory();
     }
 }
