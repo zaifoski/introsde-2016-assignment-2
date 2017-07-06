@@ -1,5 +1,6 @@
 package introsde.rest.ehealth.resources;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -23,9 +24,13 @@ public class MeasureResource {
 	 */
 	@GET
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    public List<MeasureDefinition> getAllMeasureTypes() {
+    public List<String> getAllMeasureTypes() {
 		List<MeasureDefinition> allMeasureTypes = MeasureDefinition.getAll();
-        return allMeasureTypes;
+		List<String> allMeasureNames = new ArrayList<String>();
+		for(MeasureDefinition measureType : allMeasureTypes){
+			allMeasureNames.add(measureType.getMeasureName());
+		}
+        return allMeasureNames;
     }
 
 }
