@@ -146,8 +146,14 @@ public class PersonCollectionResource {
     @Path("{id}/{measuretype}/{mid}")
     @Produces({MediaType.TEXT_XML,  MediaType.APPLICATION_JSON ,  MediaType.APPLICATION_XML })
     public LifeStatus getMeasureFromPersonIdMeasureId(@PathParam("id") int id,
-    	@PathParam("measuretype") String type,@PathParam("mid") int mid) {
-    	return LifeStatus.getLifeStatusById(mid);
+    	@PathParam("measuretype") String measuretype,@PathParam("mid") int mid) {
+    	Person p = Person.getPersonById(id);
+    	List<LifeStatus> plfs = p.getLifeStatus();
+    	for (LifeStatus plf : plfs){
+    		if(plf.getIdMeasure()==mid && plf.getName().equals(measuretype))
+    			return plf;
+    	}
+		return null;
     	/*
 	    List<HealthMeasureHistory> listAll = HealthMeasureHistory.getAll();
 	    HealthMeasureHistory filtered = null;

@@ -44,6 +44,9 @@ public class LifeStatus implements Serializable {
 	@Column(name = "value")
 	private String value;
 	
+	@Column(name = "name")
+	private String name;
+	
 	@OneToOne
 	@JoinColumn(name = "idMeasureDef", referencedColumnName = "idMeasureDef", insertable = true, updatable = true)
 	private MeasureDefinition measureDefinition;
@@ -68,6 +71,14 @@ public class LifeStatus implements Serializable {
 
 	public void setIdMeasure(int idMeasure) {
 		this.idMeasure = idMeasure;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getValue() {
