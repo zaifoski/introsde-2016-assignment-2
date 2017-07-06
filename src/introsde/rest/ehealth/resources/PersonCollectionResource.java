@@ -147,10 +147,10 @@ public class PersonCollectionResource {
     @Produces({MediaType.TEXT_XML,  MediaType.APPLICATION_JSON ,  MediaType.APPLICATION_XML })
     public LifeStatus getMeasureFromPersonIdMeasureId(@PathParam("id") int id,
     	@PathParam("measuretype") String measuretype,@PathParam("mid") int mid) {
-    	Person p = Person.getPersonById(id);
     	List<LifeStatus> plfs = LifeStatus.getAll();
     	for (LifeStatus plf : plfs){
-    		if(plf.getIdMeasure() == mid && plf.getPerson().getIdPerson() == id)
+    		if(plf.getIdMeasure() == mid && plf.getPerson().getIdPerson() == id
+    				&& plf.getMeasureDefinition().getMeasureType().equals(measuretype))
     			return plf;
     	}
 		return null;
