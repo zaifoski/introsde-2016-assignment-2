@@ -28,7 +28,7 @@ public class MeasureResource {
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     public MeasureDefinitionHelper getAllMeasureTypes() {
 		List<MeasureDefinition> allMeasureTypes = MeasureDefinition.getAll();
-		List measureNames = null;
+		List<String> measureNames = new ArrayList<String>();
 		for(MeasureDefinition measureType: allMeasureTypes){
 			measureNames.add(measureType.getMeasureName());
 		}

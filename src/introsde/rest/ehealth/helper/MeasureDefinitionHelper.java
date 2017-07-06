@@ -12,13 +12,13 @@ public class MeasureDefinitionHelper implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@XmlElement(name="measureType")
-	private List listMeasures = null;
+	private List<String> listMeasures = null;
 
-	public List getListMeasures() {
+	public List<String> getListMeasures() {
 		return listMeasures;
 	}
 
-	public void setListMeasures(List listMeasures) {
+	public void setListMeasures(List<String> listMeasures) {
 		this.listMeasures=listMeasures;
 	}
 
