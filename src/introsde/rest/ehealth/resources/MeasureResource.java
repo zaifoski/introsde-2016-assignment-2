@@ -1,6 +1,7 @@
 package introsde.rest.ehealth.resources;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -24,13 +25,15 @@ public class MeasureResource {
 	 */
 	@GET
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    public List<String> getAllMeasureTypes() {
+    public HashMap<String,List<String>> getAllMeasureTypes() {
 		List<MeasureDefinition> allMeasureTypes = MeasureDefinition.getAll();
 		List<String> allMeasureNames = new ArrayList<String>();
 		for(MeasureDefinition measureType : allMeasureTypes){
 			allMeasureNames.add(measureType.getMeasureName());
 		}
-        return allMeasureNames;
+		HashMap<String, List<String>> dictMeasureNames = new HashMap<String, List<String>>();
+		dictMeasureNames.put("measureType",allMeasureNames);
+        return dictMeasureNames;
     }
 
 }
