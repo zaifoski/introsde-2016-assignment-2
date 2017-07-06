@@ -154,20 +154,5 @@ public class PersonCollectionResource {
     			return plf;
     	}
 		return null;
-    	/*
-	    List<HealthMeasureHistory> listAll = HealthMeasureHistory.getAll();
-	    HealthMeasureHistory filtered = null;
-	    for(int i = 0; i < listAll.size(); i++){
-	    	HealthMeasureHistory measure = listAll.get(i);
-	    	if (
-	    			measure.getMeasureDefinition().getMeasureName().equals(type) &&
-	    			measure.getPerson().getIdPerson() == id &&
-	    			measure.getMeasureDefinition().getIdMeasureDef() == mid
-	    	){
-	    		filtered = measure;
-	    	}
-	    }
-	    return filtered;
-	    */
     }
 }
