@@ -12,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import introsde.rest.ehealth.model.MeasureDefinition;
+import introsde.rest.ehealth.model.MeasureDefinitionHelper;
 import introsde.rest.ehealth.model.Person;
 
 @Stateless // will work only inside a Java EE application
@@ -25,6 +26,19 @@ public class MeasureResource {
 	 */
 	@GET
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    public MeasureDefinitionHelper getAllMeasureTypes() {
+		List<MeasureDefinition> allMeasureTypes = MeasureDefinition.getAll();
+		ArrayList<String> allMeasureNames = new ArrayList<String>();
+		for(MeasureDefinition measureType : allMeasureTypes){
+			allMeasureNames.add(measureType.getMeasureName());
+		}
+		MeasureDefinitionHelper measuresFormatted = new MeasureDefinitionHelper();
+		measuresFormatted.setMeasureTypes(allMeasureNames);
+        return measuresFormatted;
+    }
+	/*
+	@GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     public HashMap<String,List<String>> getAllMeasureTypes() {
 		List<MeasureDefinition> allMeasureTypes = MeasureDefinition.getAll();
 		List<String> allMeasureNames = new ArrayList<String>();
@@ -35,5 +49,6 @@ public class MeasureResource {
 		dictMeasureNames.put("measureType",allMeasureNames);
         return dictMeasureNames;
     }
+    */
 
 }
