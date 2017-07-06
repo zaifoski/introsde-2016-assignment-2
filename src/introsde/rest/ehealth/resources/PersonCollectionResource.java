@@ -135,5 +135,17 @@ public class PersonCollectionResource {
 	    	s += history.getHealthMeasureHistoryById(Integer.parseInt(history.getValue()));
 	    }
 	    return s;*/
+    }   
+    
+    /*
+     * Request #7:  GET /person/{id}/{measureType}/{mid} should return the value of {measureType}
+     * (e.g. weight) identified by {mid} for person identified by {id}
+     */
+    @GET
+    @Path("{id}/{measuretype}/{mid}")
+    @Produces({MediaType.TEXT_XML,  MediaType.APPLICATION_JSON ,  MediaType.APPLICATION_XML })
+    public List<HealthMeasureHistory> getMeasureFromPersonIdMeasureId(@PathParam("id") int id,
+    	@PathParam("measuretype") String type,@PathParam("mid") int mid) {
+	    return (List<HealthMeasureHistory>) HealthMeasureHistory.getHealthMeasureHistoryById(mid);
     }
 }
