@@ -2,10 +2,12 @@ package introsde.rest.ehealth.helper;
 
 import java.io.Serializable;
 
+
 import javax.xml.bind.annotation.*;
 
 import java.util.List;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="measureTypes")
 public class MeasureDefinitionHelper implements Serializable{
 
