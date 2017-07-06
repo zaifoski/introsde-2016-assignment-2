@@ -145,9 +145,10 @@ public class PersonCollectionResource {
     @GET
     @Path("{id}/{measuretype}/{mid}")
     @Produces({MediaType.TEXT_XML,  MediaType.APPLICATION_JSON ,  MediaType.APPLICATION_XML })
-    public HealthMeasureHistory getMeasureFromPersonIdMeasureId(@PathParam("id") int id,
+    public LifeStatus getMeasureFromPersonIdMeasureId(@PathParam("id") int id,
     	@PathParam("measuretype") String type,@PathParam("mid") int mid) {
-    	UpdatePeople.updatePeople();
+    	return LifeStatus.getLifeStatusById(mid);
+    	/*
 	    List<HealthMeasureHistory> listAll = HealthMeasureHistory.getAll();
 	    HealthMeasureHistory filtered = null;
 	    for(int i = 0; i < listAll.size(); i++){
@@ -161,5 +162,6 @@ public class PersonCollectionResource {
 	    	}
 	    }
 	    return filtered;
+	    */
     }
 }
