@@ -1,4 +1,4 @@
-package helper;
+package introsde.rest.ehealth.helper;
 
 import java.io.Serializable;
 

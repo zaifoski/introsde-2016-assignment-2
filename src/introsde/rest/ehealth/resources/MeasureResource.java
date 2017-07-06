@@ -11,7 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import helper.MeasureDefinitionHelper;
+import introsde.rest.ehealth.helper.MeasureDefinitionHelper;
 import introsde.rest.ehealth.model.MeasureDefinition;
 import introsde.rest.ehealth.model.Person;
 
