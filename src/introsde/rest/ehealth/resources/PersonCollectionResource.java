@@ -148,9 +148,9 @@ public class PersonCollectionResource {
     public LifeStatus getMeasureFromPersonIdMeasureId(@PathParam("id") int id,
     	@PathParam("measuretype") String measuretype,@PathParam("mid") int mid) {
     	Person p = Person.getPersonById(id);
-    	List<LifeStatus> plfs = p.getLifeStatus();
+    	List<LifeStatus> plfs = LifeStatus.getAll();
     	for (LifeStatus plf : plfs){
-    		if(plf.getIdMeasure()==mid)
+    		if(plf.getIdMeasure() == mid && plf.getPerson().getIdPerson() == id)
     			return plf;
     	}
 		return null;
