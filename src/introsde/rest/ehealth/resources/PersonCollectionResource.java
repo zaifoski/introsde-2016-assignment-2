@@ -150,7 +150,7 @@ public class PersonCollectionResource {
     	List<LifeStatus> plfs = LifeStatus.getAll();
     	for (LifeStatus plf : plfs){
     		if(plf.getIdMeasure() == mid && plf.getPerson().getIdPerson() == id
-    				&& plf.getMeasureDefinition().getMeasureType().equals(measuretype))
+    				&& plf.getMeasureDefinition().getMeasureName().equals(measuretype))
     			return plf;
     	}
 		return null;
