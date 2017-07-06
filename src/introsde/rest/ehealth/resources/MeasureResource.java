@@ -26,29 +26,9 @@ public class MeasureResource {
 	 */
 	@GET
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    public MeasureDefinitionHelper getAllMeasureTypes() {
+    public List<MeasureDefinition> getAllMeasureTypes() {
 		List<MeasureDefinition> allMeasureTypes = MeasureDefinition.getAll();
-		ArrayList<String> allMeasureNames = new ArrayList<String>();
-		for(MeasureDefinition measureType : allMeasureTypes){
-			allMeasureNames.add(measureType.getMeasureName());
-		}
-		MeasureDefinitionHelper measuresFormatted = new MeasureDefinitionHelper();
-		measuresFormatted.setMeasureTypes(allMeasureNames);
-        return measuresFormatted;
+        return allMeasureTypes;
     }
-	/*
-	@GET
-    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    public HashMap<String,List<String>> getAllMeasureTypes() {
-		List<MeasureDefinition> allMeasureTypes = MeasureDefinition.getAll();
-		List<String> allMeasureNames = new ArrayList<String>();
-		for(MeasureDefinition measureType : allMeasureTypes){
-			allMeasureNames.add(measureType.getMeasureName());
-		}
-		HashMap<String, List<String>> dictMeasureNames = new HashMap<String, List<String>>();
-		dictMeasureNames.put("measureType",allMeasureNames);
-        return dictMeasureNames;
-    }
-    */
 
 }
