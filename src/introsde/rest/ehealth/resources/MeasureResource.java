@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import helper.MeasureDefinitionHelper;
 import introsde.rest.ehealth.model.MeasureDefinition;
 import introsde.rest.ehealth.model.Person;
 
@@ -25,9 +26,15 @@ public class MeasureResource {
 	 */
 	@GET
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    public List<MeasureDefinition> getAllMeasureTypes() {
+    public MeasureDefinitionHelper getAllMeasureTypes() {
 		List<MeasureDefinition> allMeasureTypes = MeasureDefinition.getAll();
-        return allMeasureTypes;
+		List measureNames = null;
+		for(MeasureDefinition measureType: allMeasureTypes){
+			measureNames.add(measureType.getMeasureName());
+		}
+		MeasureDefinitionHelper mdh = new MeasureDefinitionHelper();
+		mdh.setListMeasures(measureNames);
+        return mdh;
     }
 
 }
