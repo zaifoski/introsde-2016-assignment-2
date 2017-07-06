@@ -12,7 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import introsde.rest.ehealth.model.MeasureDefinition;
-import introsde.rest.ehealth.model.MeasureDefinitionHelper;
 import introsde.rest.ehealth.model.Person;
 
 @Stateless // will work only inside a Java EE application
