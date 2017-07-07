@@ -148,20 +148,8 @@
     </target>
 	
     <target name="execute.client" depends="install">
-        <echo message="Executing Bof's client" />
-        <java classname="introsde.rest.client.BofClient" classpath="${build.dir}">
-            <classpath>
-                <fileset dir="${lib.dir}">
-                    <include name="**/*.jar" />
-                    <include name="*.jar" />
-                </fileset>
-            </classpath>
-        </java>
-    </target>
-	
-    <target name="execute.myclient" depends="install">
-        <echo message="Executing my client" />
-        <java classname="introsde.rest.client.MyClient" classpath="${build.dir}">
+        <echo message="Executing client" />
+        <java classname="introsde.rest.ehealth.test.model.EhealthClient" classpath="${build.dir}">
             <classpath>
                 <fileset dir="${lib.dir}">
                     <include name="**/*.jar" />

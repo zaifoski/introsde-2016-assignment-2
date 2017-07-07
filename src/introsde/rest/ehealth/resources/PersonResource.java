@@ -82,7 +82,8 @@ public class PersonResource {
      */
     @PUT
     @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    public Response putPerson(Person person) {
+    //public Response putPerson(Person person) {
+    public Person putPerson(Person person) {
         System.out.println("--> Updating Person... " +this.id);
         System.out.println("--> "+person.toString());
         Person.updatePerson(person);
@@ -96,7 +97,8 @@ public class PersonResource {
             person.setIdPerson(this.id);
             Person.updatePerson(person);
         }
-        return res;
+        //return res;
+        return person;
     }
 
     
