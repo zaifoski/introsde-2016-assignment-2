@@ -7,6 +7,7 @@ import introsde.rest.ehealth.model.Person;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javax.ejb.*;
 import javax.persistence.EntityManager;
@@ -80,23 +81,30 @@ public class PersonCollectionResource {
     @POST
     @Produces(MediaType.APPLICATION_XML)
     @Consumes(MediaType.APPLICATION_XML)
-    public Person newPerson(Person person) throws IOException {
-    	List<LifeStatus> newLifeStatuses = new ArrayList<LifeStatus>();
-        System.out.println("Creating new person...");          
+    public Person newPerson(Person person) throws IOException {        
         if (person.getLifeStatus() != null){
-        	System.out.println("sIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII");
-        	for(int i = 0; i < person.getLifeStatus().size(); i++){
-        		if(person.getLifeStatus().get(i).getMeasureDefinition()!=null){
-        			MeasureDefinition.saveMeasureDefinition(person.getLifeStatus().get(i).getMeasureDefinition());
-        		}
-        		LifeStatus newLifestatus = LifeStatus.saveLifeStatus(person.getLifeStatus().get(i));
-        		newLifeStatuses.add(newLifestatus);
-        	}
+			List<LifeStatus> personLifeStatus = new ArrayList<LifeStatus>();
+			personLifeStatus.addAll(person.getLifeStatus());
+			person.setLifeStatus(null);
+			Person p = Person.savePerson(person);
+			int personId = p.getIdPerson();
+			for (int i=0;i<personLifeStatus.size();i++) {
+				LifeStatus lifeS = personLifeStatus.get(i);
+				MeasureDefinition md = MeasureDefinition.getMeasureDefinition(lifeS.getMeasureDefinition().getMeasureName());
+				lifeS.setMeasureDefinition(md);
+				lifeS.setPerson(p);
+				LifeStatus.saveLifeStatus(lifeS);
+				Calendar calendar = Calendar.getInstance();
+				HealthMeasureHistory hm = new HealthMeasureHistory();
+				hm.setMeasureDefinition(md);
+				hm.setPerson(p);
+				hm.setTimestamp(calendar.getTime());
+				hm.setValue(lifeS.getValue());
+				HealthMeasureHistory.saveHealthMeasureHistory(hm);
+			}			
+			return Person.getPersonById(personId);
         }
-        else System.out.println("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-        Person newPerson = Person.savePerson(person);
-        newPerson.setLifeStatus(newLifeStatuses);
-        return newPerson;
+        return Person.savePerson(person);
     }
 
     // Defines that the next path parameter after the base url is
