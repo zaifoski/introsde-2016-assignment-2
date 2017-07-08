@@ -1,18 +1,15 @@
 package introsde.rest.ehealth.test.model;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.StringReader;
 import java.net.URI;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
 
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -28,12 +25,10 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import com.fasterxml.jackson.databind.util.JSONPObject;
-
-import java.io.PrintStream;
 
 @XmlRootElement(name="people")
 public class EhealthClient {
@@ -47,8 +42,8 @@ public class EhealthClient {
 	static String first_person_xml;
 	static String first_person_json;
 
-	static String newName = "Soffia";
-	
+	static String newName = "Sofia";
+		
 	public static void printResponse(
 			String number, String httpMethod,
 			String url, String acceptType, String contentType,
@@ -98,13 +93,13 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 		domFactory.setNamespaceAware(true);
 		DocumentBuilder builder = domFactory.newDocumentBuilder();
 		content = response.readEntity(String.class);
-		first_person_xml = content;
+		
 		Document doc = builder.parse(new InputSource(new StringReader(content)));
 		Element rootElement = doc.getDocumentElement();
 		return rootElement;
 	}
 
-	public static void setLogFile(String name, Boolean append){		
+	public static void setLogFile(String name, Boolean append){
 		try {
 		    System.setOut(new PrintStream(new FileOutputStream("client-server-"+name+".log",append)));
 		} catch (Exception e) {
@@ -192,13 +187,25 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 		path="/person/"+first_person_id;
 		
 		Response response = makeRequest(path,mediaType,"get","");
+
 		result = response.getStatusInfo().toString();
 		if(mediaType==MediaType.APPLICATION_XML){
 			if(response.getStatus()!=200 && response.getStatus()!=202)
 				result = "ERROR";
 			setLogFile("xml",true);
-			if(!result.equals("ERROR"))
-				getRootElement(response);
+			if(!result.equals("ERROR")){
+				Element r1 = getRootElement(response);				
+				//for NEXT request
+				for(int i = 0; i < r1.getChildNodes().getLength(); i++){
+					if (r1.getChildNodes().item(i).getNodeName().equals("name")){		
+						r1.getChildNodes().item(i).setTextContent(newName);
+					}
+				}
+				DOMImplementationLS lsImpl = (DOMImplementationLS)r1.getOwnerDocument().getImplementation().getFeature("LS", "3.0");
+				LSSerializer serializer = lsImpl.createLSSerializer();
+				serializer.getDomConfig().setParameter("xml-declaration", false); //by default its true, so set it to false to get String without xml-declaration
+				first_person_xml = serializer.writeToString(r1);
+			}
 			else content = "";
 		}
 		else{
@@ -260,18 +267,14 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 			}
 			input+= "</person>";
 			*/
+			
 			String input = first_person_xml;
 			response = makeRequest(path,mediaType,"put",input);
 			result = response.getStatusInfo().toString();
-			
-			Element rootElement = getRootElement(response);
-			
-			NodeList children = rootElement.getChildNodes();
-			for(int i = 0; i < children.getLength(); i++){
-				if (children.item(i).getNodeName().equals("name")){
-					if(!children.item(i).getTextContent().equals(newName))
-						result = "ERROR";	
-				}
+			if(response.getStatus()!=200 && response.getStatus()!=202)
+				result = "ERROR";
+			if(!result.equals("ERROR")){
+				getRootElement(response);
 			}
 		}
 		else {
@@ -293,7 +296,6 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 			input+= "}";
 			*/
 			String input = first_person_json;
-			System.out.println(input);
 			response = makeRequest(path,mediaType,"put",input);
 			result = response.getStatusInfo().toString();
 			content = response.readEntity(String.class);
