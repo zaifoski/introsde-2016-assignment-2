@@ -92,18 +92,16 @@ public class PersonCollectionResource {
 			int personId = p.getIdPerson();
 			for (int i=0;i<personLifeStatus.size();i++) {
 				LifeStatus lifeS = personLifeStatus.get(i);
-				/*
 				MeasureDefinition md = MeasureDefinition
 						.getMeasureDefinition(lifeS.getMeasureDefinition().getMeasureName());
 				lifeS.setMeasureDefinition(md);
-				*/
 				lifeS.setPerson(p);
 				LifeStatus.saveLifeStatus(lifeS);
 				Calendar calendar = Calendar.getInstance();
 				HealthMeasureHistory hm = new HealthMeasureHistory();
-				hm.setMeasureDefinition(lifeS.getMeasureDefinition());//hm.setMeasureDefinition(md);
+				hm.setMeasureDefinition(md);
 				hm.setPerson(p);
-				//hm.setTimestamp(calendar.getTime());
+				hm.setTimestamp(calendar.getTime());
 				hm.setValue(lifeS.getValue());
 				HealthMeasureHistory.saveHealthMeasureHistory(hm);
 			}			
