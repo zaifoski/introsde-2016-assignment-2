@@ -99,7 +99,6 @@ public class PersonCollectionResource {
 				*/
 				lifeS.setPerson(p);
 				LifeStatus.saveLifeStatus(lifeS);
-				/*
 				Calendar calendar = Calendar.getInstance();
 				HealthMeasureHistory hm = new HealthMeasureHistory();
 				hm.setMeasureDefinition(lifeS.getMeasureDefinition());//hm.setMeasureDefinition(md);
@@ -107,7 +106,6 @@ public class PersonCollectionResource {
 				//hm.setTimestamp(calendar.getTime());
 				hm.setValue(lifeS.getValue());
 				HealthMeasureHistory.saveHealthMeasureHistory(hm);
-				*/
 			}			
 			return Person.getPersonById(personId);
 			
