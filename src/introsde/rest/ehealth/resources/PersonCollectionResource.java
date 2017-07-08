@@ -2,6 +2,7 @@ package introsde.rest.ehealth.resources;
 import introsde.rest.ehealth.UpdatePeople;
 import introsde.rest.ehealth.model.HealthMeasureHistory;
 import introsde.rest.ehealth.model.LifeStatus;
+import introsde.rest.ehealth.model.MeasureDefinition;
 import introsde.rest.ehealth.model.Person;
 
 import java.io.IOException;
@@ -80,13 +81,16 @@ public class PersonCollectionResource {
     @Produces(MediaType.APPLICATION_XML)
     @Consumes(MediaType.APPLICATION_XML)
     public Person newPerson(Person person) throws IOException {
-    	int personId = person.getIdPerson();
         System.out.println("Creating new person...");          
         if (person.getLifeStatus() != null){
-        	for(int i = 0; i < person.getLifeStatus().size(); i++)
-        	LifeStatus.saveLifeStatus(person.getLifeStatus().get(i));
+        	for(int i = 0; i < person.getLifeStatus().size(); i++){
+        		if(person.getLifeStatus().get(i).getMeasureDefinition()!=null){
+        			MeasureDefinition.saveMeasureDefinition(person.getLifeStatus().get(i).getMeasureDefinition());
+        		}
+        		LifeStatus.saveLifeStatus(person.getLifeStatus().get(i));
+        	}
         }
-        Person.savePerson(person);
+        int personId = Person.savePerson(person).getIdPerson();
         return Person.getPersonById(personId);
     }
 
