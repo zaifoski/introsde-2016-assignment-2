@@ -84,6 +84,7 @@ public class PersonCollectionResource {
     public Person newPerson(Person person) throws IOException {        
         if (person.getLifeStatus() != null){
 			Person pe = Person.savePerson(person);
+			pe.setLifeStatus(null);
 			pe.setLastname("uuuuuuuuuuuuuuuuuuuuuu");
 			return pe;
 			/*
