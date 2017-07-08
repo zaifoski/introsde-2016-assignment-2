@@ -44,6 +44,11 @@ public class EhealthClient {
 	
 	static HashMap<String, String> firstPerson = new HashMap<String, String>(); 
 	
+	static String first_person_xml;
+	static String first_person_json;
+
+	static String newName = "Soffia";
+	
 	public static void printResponse(
 			String number, String httpMethod,
 			String url, String acceptType, String contentType,
@@ -93,6 +98,7 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 		domFactory.setNamespaceAware(true);
 		DocumentBuilder builder = domFactory.newDocumentBuilder();
 		content = response.readEntity(String.class);
+		first_person_xml = content;
 		Document doc = builder.parse(new InputSource(new StringReader(content)));
 		Element rootElement = doc.getDocumentElement();
 		return rootElement;
@@ -199,9 +205,16 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 			setLogFile("json",true);
 			if(response.getStatus()!=200 && response.getStatus()!=202)
 				result = "ERROR";
-			if(!result.equals("ERROR"))
+			if(!result.equals("ERROR")){
 				content = response.readEntity(String.class);
+			}
 			else content = "";
+
+			/*for next request: */
+			JSONObject obj = new JSONObject(content);
+			obj.put("name",newName);
+			first_person_json = obj.toString();
+
 		}
 		String contentType = "";
 		if(response!=null && response.getHeaders()!=null && 
@@ -224,34 +237,34 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 		//		R#3 => PUT /person/{id}
 		
 		path="/person/"+first_person_id;
-		String newName = "Sofia";
-		
-		String input = "";
-		Iterator<Entry<String, String>> itr = firstPerson.entrySet().iterator();
-		while(itr.hasNext()){
-			Entry<String, String> next = itr.next();
-			String value = next.getValue();
-			if(next.getKey()=="name") value = newName;
-			input += "<";
-			input += next.getKey();
-			input += ">";
-			input += value;
-			input += "</";
-			input += next.getKey();
-			input += ">";
-			System.out.println(value);			
-		}
-
-		Response response = makeRequest(path,mediaType,"put",input);
-		result = response.getStatusInfo().toString();
+		Response response;
 
 		if(mediaType==MediaType.APPLICATION_XML){
 			
 			setLogFile("xml",true);
 			
+			/*
+			String input = "<person>";
+			Iterator<Entry<String, String>> itr = firstPerson.entrySet().iterator();
+			while(itr.hasNext()){
+				Entry<String, String> next = itr.next();
+				String value = next.getValue();
+				if(next.getKey()=="name") value = newName;
+				input += "<";
+				input += next.getKey();
+				input += ">";
+				input += value;
+				input += "</";
+				input += next.getKey();
+				input += ">";	
+			}
+			input+= "</person>";
+			*/
+			String input = first_person_xml;
+			response = makeRequest(path,mediaType,"put",input);
+			result = response.getStatusInfo().toString();
+			
 			Element rootElement = getRootElement(response);
-	
-			NodeList listNode = rootElement.getChildNodes();
 			
 			NodeList children = rootElement.getChildNodes();
 			for(int i = 0; i < children.getLength(); i++){
@@ -264,10 +277,28 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 		else {
 			
 			setLogFile("json",true);
-			
+
+			/*
+			String input = "{";
+			Iterator<Entry<String, String>> itr = firstPerson.entrySet().iterator();
+			while(itr.hasNext()){
+				Entry<String, String> next = itr.next();
+				String value = next.getValue();
+				if(next.getKey()=="name") value = newName;
+				input += next.getKey();
+				input += ":";
+				input += value;
+				input += ",";
+			}
+			input+= "}";
+			*/
+			String input = first_person_json;
+			System.out.println(input);
+			response = makeRequest(path,mediaType,"put",input);
+			result = response.getStatusInfo().toString();
 			content = response.readEntity(String.class);
 			JSONObject arr = new JSONObject(content);
-			if(arr.getJSONObject("name").toString()==newName)
+			if(arr.get("name")==newName)
 				result = "ERROR";
 		}
 		String contentType = "";
@@ -276,7 +307,7 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 				response.getHeaders().get("Content-Type").toString()!=null){
 			contentType = response.getHeaders().get("Content-Type").toString();
 		}
-		printResponse("1", "PUT", path, mediaType,
+		printResponse("3", "PUT", path, mediaType,
 				contentType,
 				result,
 				Integer.toString(response.getStatus()),
