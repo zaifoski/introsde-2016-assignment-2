@@ -80,8 +80,14 @@ public class PersonCollectionResource {
     @Produces(MediaType.APPLICATION_XML)
     @Consumes(MediaType.APPLICATION_XML)
     public Person newPerson(Person person) throws IOException {
+    	int personId = person.getIdPerson();
         System.out.println("Creating new person...");          
-        return Person.savePerson(person);
+        if (person.getLifeStatus() != null){
+        	for(int i = 0; i < person.getLifeStatus().size(); i++)
+        	LifeStatus.saveLifeStatus(person.getLifeStatus().get(i));
+        }
+        Person.savePerson(person);
+        return Person.getPersonById(personId);
     }
 
     // Defines that the next path parameter after the base url is
