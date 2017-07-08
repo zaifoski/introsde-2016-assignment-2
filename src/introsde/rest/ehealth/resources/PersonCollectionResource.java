@@ -84,6 +84,7 @@ public class PersonCollectionResource {
     	List<LifeStatus> newLifeStatuses = new ArrayList<LifeStatus>();
         System.out.println("Creating new person...");          
         if (person.getLifeStatus() != null){
+        	System.out.println("sIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII");
         	for(int i = 0; i < person.getLifeStatus().size(); i++){
         		if(person.getLifeStatus().get(i).getMeasureDefinition()!=null){
         			MeasureDefinition.saveMeasureDefinition(person.getLifeStatus().get(i).getMeasureDefinition());
@@ -92,6 +93,7 @@ public class PersonCollectionResource {
         		newLifeStatuses.add(newLifestatus);
         	}
         }
+        else System.out.println("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
         Person newPerson = Person.savePerson(person);
         newPerson.setLifeStatus(newLifeStatuses);
         return newPerson;
