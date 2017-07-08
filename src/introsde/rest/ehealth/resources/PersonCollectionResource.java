@@ -83,14 +83,11 @@ public class PersonCollectionResource {
     @Consumes(MediaType.APPLICATION_XML)
     public Person newPerson(Person person) throws IOException {        
         if (person.getLifeStatus() != null){
-        	person.setLifeStatus(null);
-			Person pe = Person.savePerson(person);
-			pe.setLastname("uuuuuuuuuuuuuuuuuuuuuu");
-			return pe;
-			/*
+			
 			List<LifeStatus> personLifeStatus = new ArrayList<LifeStatus>();
 			personLifeStatus.addAll(person.getLifeStatus());
 			person.setLifeStatus(null);
+			person.setLastname("uuuuuuuuuuuuuuuuuuuuuu");
 			Person p = Person.savePerson(person);
 			int personId = p.getIdPerson();
 			for (int i=0;i<personLifeStatus.size();i++) {
@@ -108,7 +105,7 @@ public class PersonCollectionResource {
 				HealthMeasureHistory.saveHealthMeasureHistory(hm);
 			}			
 			return Person.getPersonById(personId);
-				*/
+			
         }
         return Person.savePerson(person);
     }
