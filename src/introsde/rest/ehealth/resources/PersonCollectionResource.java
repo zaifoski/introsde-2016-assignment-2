@@ -83,7 +83,7 @@ public class PersonCollectionResource {
     @Consumes(MediaType.APPLICATION_XML)
     public Person newPerson(Person person) throws IOException {        
         if (person.getLifeStatus() != null){
-			pe.setLifeStatus(null);
+        	person.setLifeStatus(null);
 			Person pe = Person.savePerson(person);
 			pe.setLastname("uuuuuuuuuuuuuuuuuuuuuu");
 			return pe;
