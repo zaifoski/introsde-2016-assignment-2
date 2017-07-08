@@ -81,17 +81,20 @@ public class PersonCollectionResource {
     @Produces(MediaType.APPLICATION_XML)
     @Consumes(MediaType.APPLICATION_XML)
     public Person newPerson(Person person) throws IOException {
+    	List<LifeStatus> newLifeStatuses = new ArrayList<LifeStatus>();
         System.out.println("Creating new person...");          
         if (person.getLifeStatus() != null){
         	for(int i = 0; i < person.getLifeStatus().size(); i++){
         		if(person.getLifeStatus().get(i).getMeasureDefinition()!=null){
         			MeasureDefinition.saveMeasureDefinition(person.getLifeStatus().get(i).getMeasureDefinition());
         		}
-        		LifeStatus.saveLifeStatus(person.getLifeStatus().get(i));
+        		LifeStatus newLifestatus = LifeStatus.saveLifeStatus(person.getLifeStatus().get(i));
+        		newLifeStatuses.add(newLifestatus);
         	}
         }
-        int personId = Person.savePerson(person).getIdPerson();
-        return Person.getPersonById(personId);
+        Person newPerson = Person.savePerson(person);
+        newPerson.setLifeStatus(newLifeStatuses);
+        return newPerson;
     }
 
     // Defines that the next path parameter after the base url is
