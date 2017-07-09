@@ -360,7 +360,9 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 		mediaType = MediaType.APPLICATION_JSON;
 		doRequest33(path, mediaType, result,  first_person_id);
 
-//		Step 3.4. Send R#4 to create the following person. Store the id of the new person. If the answer is 201 (200 or 202 are also applicable) with a person in the body who has an ID, the result is OK.
+//		Step 3.4. Send R#4 to create the following person.
+//		Store the id of the new person. If the answer is 201 (200 or 202 are also applicable) 
+//		with a person in the body who has an ID, the result is OK.
 //
 //		    {
 //		          "firstname"     : "Chuck",
