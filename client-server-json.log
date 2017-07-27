@@ -15,8 +15,74 @@ Request #3: PUT /person/1 Accept: [application/json] Content-type: [application/
 Request #4: POST /person Accept: [application/json] Content-type: [application/json]
 	=> Result: OK
 	=> HTTP Status: 200
- {"idPerson":3304,"lastname":"Rossi","name":"Mario","username":"marrossi","birthdate":"01/09/1978","email":"mario@rossi.com"}
-Request #5: DELETE /person/3304 Accept: [application/json] Content-type: 
+ {"idPerson":3405,"lastname":"Rossi","name":"Mario","username":"marrossi","birthdate":"01/09/1978","email":"mario@rossi.com"}
+Request #5: DELETE /person/3405 Accept: [application/json] Content-type: 
 	=> Result: OK
 	=> HTTP Status: 500
  
+Request #6: GET /measureTypes Accept: [application/json] Content-type: [application/json]
+	=> Result: OK
+	=> HTTP Status: 200
+ {"measureType":["weight","height","steps","blood pressure","heart rate","bmi"]}
+weight
+Request #7: GET /person/1/weight Accept: [application/json] Content-type: [application/json]
+	=> Result: OK
+	=> HTTP Status: 200
+ [{"idMeasureHistory":1,"timestamp":1356645600000,"value":"83","measureDefinition":{"idMeasureDef":1,"measureName":"weight","measureType":"double","measureDefaultRange":[]},"person":{"idPerson":1,"lastname":"Chan","name":"Sofia","username":"chuck.norris","birthdate":"01/09/1978","email":"chuck.norris@gmail.com","lifeStatus":[]}},{"idMeasureHistory":2,"timestamp":1361916000000,"value":"80","measureDefinition":{"idMeasureDef":1,"measureName":"weight","measureType":"double","measureDefaultRange":[]},"person":{"idPerson":1,"lastname":"Chan","name":"Sofia","username":"chuck.norris","birthdate":"01/09/1978","email":"chuck.norris@gmail.com","lifeStatus":[]}},{"idMeasureHistory":3,"timestamp":1372536000000,"value":"75","measureDefinition":{"idMeasureDef":1,"measureName":"weight","measureType":"double","measureDefaultRange":[]},"person":{"idPerson":1,"lastname":"Chan","name":"Sofia","username":"chuck.norris","birthdate":"01/09/1978","email":"chuck.norris@gmail.com","lifeStatus":[]}}]
+Request #7: GET /person/3103/weight Accept: [application/json] Content-type: [application/json]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ []
+height
+Request #7: GET /person/1/height Accept: [application/json] Content-type: [application/json]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ []
+Request #7: GET /person/3103/height Accept: [application/json] Content-type: [application/json]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ []
+steps
+Request #7: GET /person/1/steps Accept: [application/json] Content-type: [application/json]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ []
+Request #7: GET /person/3103/steps Accept: [application/json] Content-type: [application/json]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ []
+blood pressure
+Request #7: GET /person/1/blood pressure Accept: [application/json] Content-type: [application/json]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ []
+Request #7: GET /person/3103/blood pressure Accept: [application/json] Content-type: [application/json]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ []
+heart rate
+Request #7: GET /person/1/heart rate Accept: [application/json] Content-type: [application/json]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ []
+Request #7: GET /person/3103/heart rate Accept: [application/json] Content-type: [application/json]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ []
+bmi
+Request #7: GET /person/1/bmi Accept: [application/json] Content-type: [application/json]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ []
+Request #7: GET /person/3103/bmi Accept: [application/json] Content-type: [application/json]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ []
+Request #7: 
+	FINAL RESULT: OK
+	 measure_id: 3
+	 measure_type: weight
+Request #8: GET /person/1/weight/3 Accept: [application/json] Content-type: [application/json]
+	=> Result: OK
+	=> HTTP Status: 200
+ {"idMeasureHistory":3,"timestamp":1372536000000,"value":"75","measureDefinition":{"idMeasureDef":1,"measureName":"weight","measureType":"double","measureDefaultRange":[]},"person":{"idPerson":1,"lastname":"Chan","name":"Sofia","username":"chuck.norris","birthdate":"01/09/1978","email":"chuck.norris@gmail.com","lifeStatus":[]}}

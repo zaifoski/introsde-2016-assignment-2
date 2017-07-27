@@ -6,8 +6,10 @@ import java.io.PrintStream;
 import java.io.StringReader;
 import java.net.URI;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -48,6 +50,7 @@ public class EhealthClient {
 	
 	static String first_person_xml;
 	static String first_person_json;
+	static String last_person_id = null;
 
 	static String newName = "Sofia";
 		
@@ -142,7 +145,6 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 		Response response = makeRequest(path,mediaType,"get","");
 		result = response.getStatusInfo().toString();
 		String first_person_id = null;
-		String last_person_id = null;
 		if(mediaType==MediaType.APPLICATION_XML){
 			
 			setLogFile("xml",true);
@@ -453,6 +455,186 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 		
 	}
 
+	public static List<String> doRequest36(String path, String mediaType, String result) throws ParserConfigurationException, SAXException, IOException, ParseException{
+
+		//		Step 3.6. Follow now with the R#9 (GET BASE_URL/measureTypes).
+		//		If response contains more than 2 measureTypes - result is OK, 
+		//		else is ERROR (less than 3 measureTypes). 
+		//		Save all measureTypes into array (measure_types)
+		
+		path = "/measureTypes";
+		List<String> measureTypes = new ArrayList<String>(); 
+		
+		Response response = makeRequest(path,mediaType,"get","");
+		result = response.getStatusInfo().toString();
+		if(mediaType==MediaType.APPLICATION_XML){
+			
+			setLogFile("xml",true);
+			
+			Element rootElement = getRootElement(response);
+	
+			NodeList listNode = rootElement.getChildNodes();
+			
+			if(listNode.getLength()<= 2)
+				result = "ERROR";
+			
+			for(int i = 0; i < listNode.getLength(); i++){
+				measureTypes.add(listNode.item(i).getTextContent());
+			}
+		}
+		else {
+			
+			setLogFile("json",true);
+			
+			content = response.readEntity(String.class);
+			JSONObject obj = new JSONObject(content);
+			JSONArray arr = obj.getJSONArray("measureType");
+			if(arr.length() <= 2)
+				result = "ERROR";
+			for(int i = 0; i < arr.length(); i++){
+				measureTypes.add((String) arr.get(i));
+			}
+		}
+		String contentType = "";
+		if(response!=null && response.getHeaders()!=null && 
+				response.getHeaders().get("Content-Type")!=null &&
+				response.getHeaders().get("Content-Type").toString()!=null){
+			contentType = response.getHeaders().get("Content-Type").toString();
+		}
+		printResponse("6", "GET", path, mediaType,
+				contentType,
+				result,
+				Integer.toString(response.getStatus()),
+				content);
+		
+		return measureTypes;
+	}
+	
+	public static int measure_id = -1;
+	public static String measure_type = "";
+	
+	public static String doRequest37(String path, String mediaType, String result) throws ParseException, ParserConfigurationException, SAXException, IOException {
+		
+		//		Step 3.7. Send R#6 (GET BASE_URL/person/{id}/{measureType}) 
+		//		for the first person you obtained at the beginning and the last person, 
+		//		and for each measure types from measure_types. 
+		//		If no response has at least one measure - result is ERROR 
+		//		(no data at all) else result is OK. 
+		//		Store one measure_id and one measureType.
+		List<String> measureTypes = new ArrayList<String>(); 
+		
+		Response response = makeRequest(path,mediaType,"get","");
+		result = response.getStatusInfo().toString();
+		if(mediaType==MediaType.APPLICATION_XML){
+			
+			setLogFile("xml",true);
+			
+			Element rootElement = getRootElement(response);
+	
+			NodeList listNode = rootElement.getChildNodes();
+			
+			if(listNode.getLength()< 1)
+				result = "ERROR";
+			
+			if(measure_id==-1 || !measure_type.equals("")){
+				for(int i = 0; i < listNode.getLength() && (measure_id==-1 || !measure_type.equals("")); i++){
+					NodeList list = listNode.item(i).getChildNodes();
+					for(int j = 0; j < list.getLength(); j++){
+						if(list.item(j).getNodeName().equals("idMeasureHistory")){
+							measure_id = Integer.parseInt(list.item(j).getTextContent());
+						}
+						if(list.item(j).getNodeName().equals("measureDefinition")){
+							NodeList list2 = list.item(j).getChildNodes();
+							for(int k = 0; k < list2.getLength(); k++){
+								if(list2.item(k).getNodeName().equals("measureName")){
+									measure_type = list2.item(k).getTextContent();
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		else {
+			
+			setLogFile("json",true);
+			
+			content = response.readEntity(String.class);
+			try{
+				JSONArray arr = new JSONArray(content);
+				if(arr.length() < 1)
+					result = "ERROR";
+				
+				if(measure_id==-1 || !measure_type.equals("")){
+					for(int i = 0; i < arr.length() && (measure_id==-1 || !measure_type.equals("")); i++){
+						JSONObject obj = new JSONObject(arr.get(i));
+						try{
+							if(obj.get("idMeasureHistory")!=null){
+								measure_id = Integer.parseInt((String) obj.get("idMeasureHistory"));
+							}
+							if(obj.get("measureDefinition")!=null){
+								JSONObject obj2 = new JSONObject(obj.get("measureDefinition"));
+								if(obj2.get("measureName")!=null){
+									measure_type = (String) obj2.get("measureName");
+								}
+							}
+						}catch(Exception e){}
+					}
+				}
+			} catch(Exception e){result = "ERROR";}
+		}
+		String contentType = "";
+		if(response!=null && response.getHeaders()!=null && 
+				response.getHeaders().get("Content-Type")!=null &&
+				response.getHeaders().get("Content-Type").toString()!=null){
+			contentType = response.getHeaders().get("Content-Type").toString();
+		}
+		printResponse("7", "GET", path, mediaType,
+				contentType,
+				result,
+				Integer.toString(response.getStatus()),
+				content);
+		return result;
+	}
+	
+	public static void doRequest38(String path, String mediaType, String result) throws ParseException, ParserConfigurationException, SAXException, IOException{
+				
+		//		Step 3.8. Send R#7 (GET BASE_URL/person/{id}/{measureType}/{mid})
+		//		for the stored measure_id and measureType. If the response is 200, 
+		//		result is OK, else is ERROR.
+		
+		Response response = makeRequest(path,mediaType,"get","");
+		result = response.getStatusInfo().toString();
+
+		if(response.getStatus()==200 || response.getStatus()==202)
+			result = "OK";
+		else result = "ERROR";
+		
+		if(mediaType==MediaType.APPLICATION_XML){
+			
+			setLogFile("xml",true);
+			
+			getRootElement(response) ;
+		}
+		else {
+			
+			setLogFile("json",true);
+			
+			content = response.readEntity(String.class);
+		}
+		String contentType = "";
+		if(response!=null && response.getHeaders()!=null && 
+				response.getHeaders().get("Content-Type")!=null &&
+				response.getHeaders().get("Content-Type").toString()!=null){
+			contentType = response.getHeaders().get("Content-Type").toString();
+		}
+		printResponse("8", "GET", path, mediaType,
+				contentType,
+				result,
+				Integer.toString(response.getStatus()),
+				content);
+	}
+	
 	public static void main(String args[]) throws Exception {
 		
 		/*
@@ -507,13 +689,52 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 
 		mediaType = MediaType.APPLICATION_XML;
 		doRequest35(path, mediaType, result, id);
+		
+		mediaType = MediaType.APPLICATION_XML;
+		List<String> measureTypes = doRequest36(path, mediaType, result);
+		result = "ERROR"; String finalResult = "ERROR";
+		for(String measureType:measureTypes){
+			path = "/person/"+first_person_id+"/"+measureType;
+			result = doRequest37(path, mediaType, result);
+			if (!result.equals("ERROR")) finalResult = "OK";
+			path = "/person/"+last_person_id+"/"+measureType;
+			result = doRequest37(path, mediaType, result);
+			if (!result.equals("ERROR")) finalResult = "OK";
+		}
+		path = "";
+		System.out.println("Request #7: \n\tFINAL RESULT: "+finalResult+"\n\t measure_id: "+measure_id+"\n\t measure_type: "+measure_type);
+		result = "ERROR";
+		
+		mediaType = MediaType.APPLICATION_JSON;
+		measureTypes = doRequest36(path, mediaType, result);
+		result = "ERROR"; finalResult = "ERROR";
+		for(String measureType:measureTypes){
+			System.out.println(measureType);
+			path = "/person/"+first_person_id+"/"+measureType;
+			result = doRequest37(path, mediaType, result);
+			if (!result.equals("ERROR")) finalResult = "OK";
+			path = "/person/"+last_person_id+"/"+measureType;
+			result = doRequest37(path, mediaType, result);
+			if (!result.equals("ERROR")) finalResult = "OK";
+		}
+		path = "";
+		System.out.println("Request #7: \n\tFINAL RESULT: "+finalResult+"\n\t measure_id: "+measure_id+"\n\t measure_type: "+measure_type);
+		result = "ERROR";
 
+		path = "/person/"+1+"/"+measure_type+"/"+measure_id;
+		mediaType = MediaType.APPLICATION_XML;
+		doRequest38(path, mediaType, result);
+		mediaType = MediaType.APPLICATION_JSON;
+		doRequest38(path, mediaType, result);
 
-//
-//		Step 3.6. Follow now with the R#9 (GET BASE_URL/measureTypes). If response contains more than 2 measureTypes - result is OK, else is ERROR (less than 3 measureTypes). Save all measureTypes into array (measure_types)
-//		Step 3.7. Send R#6 (GET BASE_URL/person/{id}/{measureType}) for the first person you obtained at the beginning and the last person, and for each measure types from measure_types. If no response has at least one measure - result is ERROR (no data at all) else result is OK. Store one measure_id and one measureType.
-//		Step 3.8. Send R#7 (GET BASE_URL/person/{id}/{measureType}/{mid}) for the stored measure_id and measureType. If the response is 200, result is OK, else is ERROR.
-//		Step 3.9. Choose a measureType from measure_types and send the request R#6 (GET BASE_URL/person/{first_person_id}/{measureType}) and save count value (e.g. 5 measurements). Then send R#8 (POST BASE_URL/person/{first_person_id}/{measureType}) with the measurement specified below. Follow up with another R#6 as the first to check the new count value. If it is 1 measure more - print OK, else print ERROR. Remember, first with JSON and then with XML as content-types
+		
+//		Step 3.9. Choose a measureType from measure_types and send
+//		the request R#6 (GET BASE_URL/person/{first_person_id}/{measureType}) 
+//		and save count value (e.g. 5 measurements).
+//		Then send R#8 (POST BASE_URL/person/{first_person_id}/{measureType}) 
+//		with the measurement specified below. 
+//		Follow up with another R#6 as the first to check the new count value.
+//		If it is 1 measure more - print OK, else print ERROR. 
 //
 //		        <measure>
 //		            <value>72</value>

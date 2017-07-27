@@ -174,14 +174,28 @@ public class PersonCollectionResource {
     @GET
     @Path("{id}/{measuretype}/{mid}")
     @Produces({MediaType.TEXT_XML,  MediaType.APPLICATION_JSON ,  MediaType.APPLICATION_XML })
-    public LifeStatus getMeasureFromPersonIdMeasureId(@PathParam("id") int id,
+    public HealthMeasureHistory getMeasureFromPersonIdMeasureId(@PathParam("id") int id,
     	@PathParam("measuretype") String measuretype,@PathParam("mid") int mid) {
-    	List<LifeStatus> plfs = LifeStatus.getAll();
-    	for (LifeStatus plf : plfs){
-    		if(plf.getIdMeasure() == mid && plf.getPerson().getIdPerson() == id
-    				&& plf.getMeasureDefinition().getMeasureName().equals(measuretype))
-    			return plf;
-    	}
-		return null;
+//    	List<LifeStatus> plfs = LifeStatus.getAll();
+//    	for (LifeStatus plf : plfs){
+//    		if(plf.getIdMeasure() == mid && plf.getPerson().getIdPerson() == id
+//    				&& plf.getMeasureDefinition().getMeasureName().equals(measuretype))
+//    			return plf;  
+//    	}
+//		return null;
+	    List<HealthMeasureHistory> listAll = HealthMeasureHistory.getAll();
+	    HealthMeasureHistory found = null;
+	    for(int i = 0; i < listAll.size(); i++){
+	    	HealthMeasureHistory measure = listAll.get(i);
+	    	if (
+	    			measure.getMeasureDefinition().getMeasureName().equals(measuretype) &&
+	    			measure.getPerson().getIdPerson() == id &&
+	    			measure.getIdMeasureHistory() == mid
+	    	){
+	    		found = measure;
+	    		return found;
+	    	}
+	    }
+	    return found;
     }
 }

@@ -16,8 +16,68 @@ Request #3: PUT /person/1 Accept: [application/xml] Content-type: [application/x
 Request #4: POST /person Accept: [application/xml] Content-type: [application/xml]
 	=> Result: OK
 	=> HTTP Status: 200
- <?xml version="1.0" encoding="UTF-8" standalone="yes"?><person><birthdate>01/01/1945</birthdate><email>mario@rossi.com</email><idPerson>3305</idPerson><lastname>Rossi</lastname><name>Mario</name><username>marrossi</username></person>
-Request #5: DELETE /person/3305 Accept: [application/xml] Content-type: 
+ <?xml version="1.0" encoding="UTF-8" standalone="yes"?><person><birthdate>01/01/1945</birthdate><email>mario@rossi.com</email><idPerson>3406</idPerson><lastname>Rossi</lastname><name>Mario</name><username>marrossi</username></person>
+Request #5: DELETE /person/3406 Accept: [application/xml] Content-type: 
 	=> Result: OK
 	=> HTTP Status: 500
  
+Request #6: GET /measureTypes Accept: [application/xml] Content-type: [application/xml]
+	=> Result: OK
+	=> HTTP Status: 200
+ <?xml version="1.0" encoding="UTF-8" standalone="yes"?><measureTypes><measureType>weight</measureType><measureType>height</measureType><measureType>steps</measureType><measureType>blood pressure</measureType><measureType>heart rate</measureType><measureType>bmi</measureType></measureTypes>
+Request #7: GET /person/1/weight Accept: [application/xml] Content-type: [application/xml]
+	=> Result: OK
+	=> HTTP Status: 200
+ <?xml version="1.0" encoding="UTF-8" standalone="yes"?><healthMeasureHistories><healthMeasureHistory><idMeasureHistory>1</idMeasureHistory><measureDefinition><idMeasureDef>1</idMeasureDef><measureName>weight</measureName><measureType>double</measureType></measureDefinition><person><birthdate>01/09/1978</birthdate><email>chuck.norris@gmail.com</email><idPerson>1</idPerson><lastname>Chan</lastname><Measurements/><name>Sofia</name><username>chuck.norris</username></person><timestamp>2012-12-27T23:00:00+01:00</timestamp><value>83</value></healthMeasureHistory><healthMeasureHistory><idMeasureHistory>2</idMeasureHistory><measureDefinition><idMeasureDef>1</idMeasureDef><measureName>weight</measureName><measureType>double</measureType></measureDefinition><person><birthdate>01/09/1978</birthdate><email>chuck.norris@gmail.com</email><idPerson>1</idPerson><lastname>Chan</lastname><Measurements/><name>Sofia</name><username>chuck.norris</username></person><timestamp>2013-02-26T23:00:00+01:00</timestamp><value>80</value></healthMeasureHistory><healthMeasureHistory><idMeasureHistory>3</idMeasureHistory><measureDefinition><idMeasureDef>1</idMeasureDef><measureName>weight</measureName><measureType>double</measureType></measureDefinition><person><birthdate>01/09/1978</birthdate><email>chuck.norris@gmail.com</email><idPerson>1</idPerson><lastname>Chan</lastname><Measurements/><name>Sofia</name><username>chuck.norris</username></person><timestamp>2013-06-29T22:00:00+02:00</timestamp><value>75</value></healthMeasureHistory></healthMeasureHistories>
+Request #7: GET /person/3103/weight Accept: [application/xml] Content-type: [application/xml]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ <?xml version="1.0" encoding="UTF-8" standalone="yes"?><healthMeasureHistories></healthMeasureHistories>
+Request #7: GET /person/1/height Accept: [application/xml] Content-type: [application/xml]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ <?xml version="1.0" encoding="UTF-8" standalone="yes"?><healthMeasureHistories></healthMeasureHistories>
+Request #7: GET /person/3103/height Accept: [application/xml] Content-type: [application/xml]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ <?xml version="1.0" encoding="UTF-8" standalone="yes"?><healthMeasureHistories></healthMeasureHistories>
+Request #7: GET /person/1/steps Accept: [application/xml] Content-type: [application/xml]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ <?xml version="1.0" encoding="UTF-8" standalone="yes"?><healthMeasureHistories></healthMeasureHistories>
+Request #7: GET /person/3103/steps Accept: [application/xml] Content-type: [application/xml]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ <?xml version="1.0" encoding="UTF-8" standalone="yes"?><healthMeasureHistories></healthMeasureHistories>
+Request #7: GET /person/1/blood pressure Accept: [application/xml] Content-type: [application/xml]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ <?xml version="1.0" encoding="UTF-8" standalone="yes"?><healthMeasureHistories></healthMeasureHistories>
+Request #7: GET /person/3103/blood pressure Accept: [application/xml] Content-type: [application/xml]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ <?xml version="1.0" encoding="UTF-8" standalone="yes"?><healthMeasureHistories></healthMeasureHistories>
+Request #7: GET /person/1/heart rate Accept: [application/xml] Content-type: [application/xml]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ <?xml version="1.0" encoding="UTF-8" standalone="yes"?><healthMeasureHistories></healthMeasureHistories>
+Request #7: GET /person/3103/heart rate Accept: [application/xml] Content-type: [application/xml]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ <?xml version="1.0" encoding="UTF-8" standalone="yes"?><healthMeasureHistories></healthMeasureHistories>
+Request #7: GET /person/1/bmi Accept: [application/xml] Content-type: [application/xml]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ <?xml version="1.0" encoding="UTF-8" standalone="yes"?><healthMeasureHistories></healthMeasureHistories>
+Request #7: GET /person/3103/bmi Accept: [application/xml] Content-type: [application/xml]
+	=> Result: ERROR
+	=> HTTP Status: 200
+ <?xml version="1.0" encoding="UTF-8" standalone="yes"?><healthMeasureHistories></healthMeasureHistories>
+Request #7: 
+	FINAL RESULT: OK
+	 measure_id: 3
+	 measure_type: weight
+Request #8: GET /person/1/weight/3 Accept: [application/xml] Content-type: [application/xml]
+	=> Result: OK
+	=> HTTP Status: 200
+ <?xml version="1.0" encoding="UTF-8" standalone="yes"?><healthMeasureHistory><idMeasureHistory>3</idMeasureHistory><measureDefinition><idMeasureDef>1</idMeasureDef><measureName>weight</measureName><measureType>double</measureType></measureDefinition><person><birthdate>01/09/1978</birthdate><email>chuck.norris@gmail.com</email><idPerson>1</idPerson><lastname>Chan</lastname><Measurements/><name>Sofia</name><username>chuck.norris</username></person><timestamp>2013-06-29T22:00:00+02:00</timestamp><value>75</value></healthMeasureHistory>
