@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringReader;
 import java.net.URI;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.ws.rs.client.Client;
@@ -12,6 +14,8 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -30,10 +34,13 @@ import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import introsde.rest.ehealth.model.Person;
+
 @XmlRootElement(name="people")
 public class EhealthClient {
 	
-	static String serverUri = "https://ass2zai.herokuapp.com/sdelab/";
+	//static String serverUri = "https://ass2zai.herokuapp.com/sdelab/";
+	static String serverUri = "http://localhost:5700/sdelab/";
 	
 	static String content = "";
 	
@@ -68,7 +75,8 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 			   
 	}
 	
-	public static Response makeRequest(String path, String mediaType, String method, String input){
+	public static Response makeRequest(String path, String mediaType, 
+			String method, String input) throws ParseException{
 
 		URI server = UriBuilder.fromUri(serverUri).build();
 		ClientConfig clientConfig = new ClientConfig();
@@ -83,6 +91,20 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 		else if(method=="put")
 		response = service.path(path).request(mediaType).accept(mediaType)
 				.put(Entity.entity(input, mediaType), Response.class);
+		else if(method=="post"){
+			response = service
+					.path(path)
+					.request()
+					.accept(mediaType)
+					.post(Entity.entity(input, mediaType), Response.class);
+		}
+		else if(method=="delete"){
+			response = service
+					.path(path)
+					.request()
+					.accept(mediaType)
+					.delete();
+		}
 
 		return response;
 	}
@@ -107,7 +129,7 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 		}
 	}
 	
-	public static String doRequest31(String path, String mediaType, String result) throws ParserConfigurationException, SAXException, IOException{
+	public static String doRequest31(String path, String mediaType, String result) throws ParserConfigurationException, SAXException, IOException, ParseException{
 
 		//		Step 3.1. Send R#1 (GET BASE_URL/person).
 		//		Calculate how many people are in the response.
@@ -179,7 +201,7 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 	}
 
 	public static void doRequest32(String path, String mediaType, String result,
-			String first_person_id) throws ParserConfigurationException, SAXException, IOException{
+			String first_person_id) throws ParserConfigurationException, SAXException, IOException, ParseException{
 		
 		//	Step 3.2. Send R#2 for first_person_id. If the responses for this is 200 or 202,
 		//	the result is OK.
@@ -237,7 +259,7 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 	}
 
 	public static void doRequest33(String path, String mediaType, String result,
-			String first_person_id) throws ParserConfigurationException, SAXException, IOException{
+			String first_person_id) throws ParserConfigurationException, SAXException, IOException, ParseException{
 		
 		//		Step 3.3. Send R#3 for first_person_id changing the firstname. 
 		//		If the responses has the name changed, the result is OK.
@@ -317,6 +339,120 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 		
 	}
 	
+	public static int doRequest34(String path, String mediaType, String result) throws ParserConfigurationException, SAXException, IOException, ParseException{
+
+		//		Step 3.4. Send R#4 to create the following person.
+		//		Store the id of the new person. If the answer is 201 (200 or 202 are also applicable) 
+		//		with a person in the body who has an ID, the result is OK.
+		//
+		//		    {
+		//		          "firstname"     : "Chuck",
+		//		          "lastname"      : "Norris",
+		//		          "birthdate"     : "1945-01-01",
+		//		          "healthProfile" : {
+		//		                    "weight"  : 78.9,
+		//		                    "height"  : 172
+		//		          }
+		//		    }
+		
+		path = "/person";
+		Response response = null;
+		String contentType = "";
+		int new_person_id = -1;
+
+		if(mediaType==MediaType.APPLICATION_XML){
+			setLogFile("xml",true);
+			
+			String input = "<person>" 
+					+ "<name>Mario</name>"
+					+ "<lastname>Rossi</lastname>"
+					+ "<birthdate>01/01/1945</birthdate>"
+					+ "<username>marrossi</username>"
+					+ "<email>mario@rossi.com</email>"
+					+ "</person>";
+
+			response = makeRequest(path,mediaType,"post",input);
+			result = response.getStatusInfo().toString();
+			Element rootElement = getRootElement(response);
+	
+			NodeList listNode = rootElement.getChildNodes();
+			for(int i = 0; i < listNode.getLength(); i++){
+				if(listNode.item(i).getNodeName().equals("idPerson")){
+					new_person_id = Integer.parseInt(listNode.item(i).getTextContent());
+				}
+			}
+			if(response.getStatus()!=200 && response.getStatus()!=202)
+				result = "ERROR";
+		}
+		else {
+			
+			setLogFile("json",true);
+			
+			JSONObject obj = new JSONObject();
+			obj.put("name", "Mario");
+			obj.put("lastname", "Rossi");
+			obj.put("birthdate", "01/09/1978");	
+			obj.put("username", "marrossi");	
+			obj.put("email", "mario@rossi.com");			
+			String input = obj.toString();
+			response = makeRequest(path,mediaType,"post",input);
+			result = response.getStatusInfo().toString();
+			if(response.getStatus()!=200 && response.getStatus()!=202)
+				result = "ERROR";
+			if(!result.equals("ERROR")){
+				content = response.readEntity(String.class);
+				JSONObject newobj = new JSONObject(content);
+				new_person_id = (int) newobj.get("idPerson");
+			}
+			else content = "";
+		}
+		if(response!=null && response.getHeaders()!=null && 
+				response.getHeaders().get("Content-Type")!=null &&
+				response.getHeaders().get("Content-Type").toString()!=null){
+			contentType = response.getHeaders().get("Content-Type").toString();
+		}
+		printResponse("4", "POST", path, mediaType,
+				contentType,
+				result,
+				Integer.toString(response.getStatus()),
+				content);
+		return new_person_id;
+	}
+	
+	public static void doRequest35(String path, String mediaType, String result, int id) throws ParseException{
+		
+		//		Step 3.5. Send R#5 for the person you have just created. 
+		//		Then send R#1 with the id of that person. 
+		//		If the answer is 404, your result must be OK.
+		
+		path="/person/"+id;
+		Response response = null;
+		String contentType = "";
+		
+		makeRequest(path,mediaType,"delete","");
+		response = makeRequest(path, mediaType, "get","");
+
+		if(mediaType==MediaType.APPLICATION_XML){
+			setLogFile("xml",true);}
+		else {
+			setLogFile("json",true);
+		}
+		if(response.getStatus()==200 || response.getStatus()==202)
+			result = "ERROR";
+		else result = "OK";
+		if(response!=null && response.getHeaders()!=null && 
+				response.getHeaders().get("Content-Type")!=null &&
+				response.getHeaders().get("Content-Type").toString()!=null){
+			contentType = response.getHeaders().get("Content-Type").toString();
+		}
+		printResponse("5", "DELETE", path, mediaType,
+				contentType,
+				result,
+				Integer.toString(response.getStatus()),
+				"");
+		
+	}
+
 	public static void main(String args[]) throws Exception {
 		
 		/*
@@ -360,20 +496,19 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 		mediaType = MediaType.APPLICATION_JSON;
 		doRequest33(path, mediaType, result,  first_person_id);
 
-//		Step 3.4. Send R#4 to create the following person.
-//		Store the id of the new person. If the answer is 201 (200 or 202 are also applicable) 
-//		with a person in the body who has an ID, the result is OK.
-//
-//		    {
-//		          "firstname"     : "Chuck",
-//		          "lastname"      : "Norris",
-//		          "birthdate"     : "1945-01-01",
-//		          "healthProfile" : {
-//		                    "weight"  : 78.9,
-//		                    "height"  : 172
-//		          }
-//		    }
-//		Step 3.5. Send R#5 for the person you have just created. Then send R#1 with the id of that person. If the answer is 404, your result must be OK.
+		mediaType = MediaType.APPLICATION_JSON;
+		int id = doRequest34(path, mediaType, result);
+
+		mediaType = MediaType.APPLICATION_JSON;
+		doRequest35(path, mediaType, result, id);
+
+		mediaType = MediaType.APPLICATION_XML;
+		id = doRequest34(path, mediaType, result);
+
+		mediaType = MediaType.APPLICATION_XML;
+		doRequest35(path, mediaType, result, id);
+
+
 //
 //		Step 3.6. Follow now with the R#9 (GET BASE_URL/measureTypes). If response contains more than 2 measureTypes - result is OK, else is ERROR (less than 3 measureTypes). Save all measureTypes into array (measure_types)
 //		Step 3.7. Send R#6 (GET BASE_URL/person/{id}/{measureType}) for the first person you obtained at the beginning and the last person, and for each measure types from measure_types. If no response has at least one measure - result is ERROR (no data at all) else result is OK. Store one measure_id and one measureType.
@@ -384,15 +519,6 @@ Request #7: GET /person/5/weight/899 Accept: APPLICATION/XML Content-Type: APPLI
 //		            <value>72</value>
 //		            <created>2011-12-09</created>
 //		        </measure>
-//		Step 3.10. Send R#10 using the {mid} or the measure created in the previous step and updating the value at will. Follow up with at R#6 to check that the value was updated. If it was, result is OK, else is ERROR.
-//
-//		      <measure>
-//		          <value>90</value>
-//		          <created>2011-12-09</created>
-//		      </measure>
-//		Step 3.11. Send R#11 for a measureType, before and after dates given by your fellow student (who implemented the server). If status is 200 and there is at least one measure in the body, result is OK, else is ERROR
-//
-//		Step 3.12. Send R#12 using the same parameters as the previous steps. If status is 200 and there is at least one person in the body, result is OK, else is ERROR
 
 	}
 }

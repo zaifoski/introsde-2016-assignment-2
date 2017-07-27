@@ -78,12 +78,14 @@ public class PersonCollectionResource {
      * created person with its assigned id (if a health profile is included,
      * create also those measurements for the new person).
      */
-    @POST
-    @Produces(MediaType.APPLICATION_XML)
-    @Consumes(MediaType.APPLICATION_XML)
-    public Person newPerson(Person person) throws IOException {        
+
+	@POST
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    public Person newPerson(Person person) throws IOException {  
+
+		System.out.println("post working");      
         if (person.getLifeStatus() != null){
-			
 			List<LifeStatus> personLifeStatus = new ArrayList<LifeStatus>();
 			personLifeStatus.addAll(person.getLifeStatus());
 			person.setLifeStatus(null);
